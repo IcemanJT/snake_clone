@@ -1,2 +1,2 @@
 # snake_clone
-snake clone project using python turtle lib
+README.md to be added
