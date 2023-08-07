@@ -44,6 +44,15 @@ def draw_map():
         map_pen.forward(600)
 
 
+def draw_reset_quit():
+    buttons = Turtle(visible=False)
+    buttons.penup()
+    buttons.speed(0)
+    buttons.setpos(450, 610)
+    buttons.color("white")
+    buttons.write("Q to abandon current game.", align="center", font=("Arial", 15, "normal"))
+
+
 def draw_win():
     win = Turtle(visible=False)
     win.speed(0)
@@ -51,7 +60,7 @@ def draw_win():
     win.pensize(5)
     win.penup()
     win.setpos(x=300, y=400)
-    win.write("You win!", align="center", font=("Arial", 50, "normal"))
+    win.write("You won!", align="center", font=("Arial", 50, "normal"))
 
 
 def draw_lose():
@@ -61,4 +70,4 @@ def draw_lose():
     lose.pensize(5)
     lose.penup()
     lose.setpos(x=300, y=400)
-    lose.write("You lose!", align="center", font=("Arial", 50, "normal"))
+    lose.write("You lost!", align="center", font=("Arial", 50, "normal"))

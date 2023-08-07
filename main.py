@@ -11,98 +11,118 @@ import time
 import map
 
 
-def snake_turn():
-    screen.onkeypress(player.up, "Up")
-    screen.update()
-    screen.onkeypress(player.down, "Down")
-    screen.update()
-    screen.onkeypress(player.left, "Left")
-    screen.update()
-    screen.onkeypress(player.right, "Right")
-    screen.update()
+def snake_turn(head, window):
+    window.onkeypress(head.up, "Up")
+    window.update()
+    window.onkeypress(head.down, "Down")
+    window.update()
+    window.onkeypress(head.left, "Left")
+    window.update()
+    window.onkeypress(head.right, "Right")
+    window.update()
 
 
-def snake_eats_fruit():
-    if player.snake[0].distance(apple) < 10:
-        apple.change_pos()
-        player.grow()
-        score_board.score += 1
-        score_board.write_score()
-    for snake_part in player.snake:
-        if apple.distance(snake_part) < 10:
-            apple.change_pos()
+def snake_eats_fruit(fruit, player_head, scoreboard):
+    if player_head.snake[0].distance(fruit) < 10:
+        fruit.change_pos()
+        player_head.grow()
+        scoreboard.score += 1
+        scoreboard.write_score()
+    for snake_part in player_head.snake:
+        if fruit.distance(snake_part) < 10:
+            fruit.change_pos()
 
 
-screen = Screen()
-screen.setup(width=610, height=640)
-screen.setworldcoordinates(0, 0, 610, 640)
-screen.tracer(0)
-screen.bgcolor("black")
-screen.title("Snake Game")
+def make_grid(canvas):
+    user_grid_choice = canvas.textinput(title="Grid of a map", prompt="Do you want to see the grid? (y/n)")
+    while user_grid_choice != "y" and user_grid_choice != "n" and user_grid_choice != "":
+        user_grid_choice = canvas.textinput(title="Grid of a map", prompt="Do you want to see the grid? (y/n)")
+    if user_grid_choice == "y":
+        map.draw_grid()
+        map.draw_map()
+    elif user_grid_choice == "n" or user_grid_choice == "":
+        map.draw_map()
 
 
-game_on = False
+def screen_setup():
+    canvas = Screen()
+    canvas.setup(width=610, height=640)
+    canvas.setworldcoordinates(0, 0, 610, 640)
+    canvas.tracer(0)
+    canvas.bgcolor("black")
+    canvas.title("Snake Game")
+    make_grid(canvas)
+    map.draw_reset_quit()
+    return canvas
 
 
-user_grid_choice = screen.textinput(title="Grid of a map", prompt="Do you want to see the grid? (y/n)")
-while user_grid_choice != "y" and user_grid_choice != "n":
-    user_grid_choice = screen.textinput(title="Grid of a map", prompt="Do you want to see the grid? (y/n)")
+def breaker():
+    global playing
+    playing = False
 
-if user_grid_choice == "y":
-    map.draw_grid()
-    map.draw_map()
-else:
-    map.draw_map()
 
-screen.update()
+def player_setup(pop_up):
+    while True:
+        try:
+            player_color_choice = pop_up.textinput(title="Snake color", prompt=""
+                                                                               "Use arrows to navigate the "
+                                                                               "snake to the fruit. \nDuring the game "
+                                                                               "make sure "
+                                                                               "to not hold the arrows as it bugs the "
+                                                                               "snake's"
+                                                                               "movement\n\nChoose the color of your "
+                                                                               "snake.\n"
+                                                                               "Color could be anything from the "
+                                                                               "https://cs111.wellesley.edu/reference"
+                                                                               "/colors,\nwhich contains most of "
+                                                                               "regular "
+                                                                               "colors if you dont bother checking.\n"
+                                                                               "If color is set to random snake is "
+                                                                               "going to "
+                                                                               "be colorful.""")
+            snake = Snake(player_color_choice)
+            return snake
+        except (turtle.TurtleGraphicsError, TypeError):
+            while pop_up.textinput(title="Error", prompt="Wrong input. Try again. Write \"ok\".") != "ok":
+                continue
+
+
+playing = True
+
+
+def game(board, snake, sweet, scoreboard):
+    board.onkey(breaker, "q")
+    while playing:
+        board.listen()
+        board.update()
+        time.sleep(0.1)
+        snake_turn(head=snake, window=board)
+        snake_eats_fruit(fruit=sweet, player_head=snake, scoreboard=scoreboard)
+        board.update()
+        time.sleep(0.1)
+        snake.move()
+        snake_eats_fruit(fruit=sweet, player_head=snake, scoreboard=scoreboard)
+        if not snake.is_alive:
+            if len(snake.snake) >= 30 * 28:
+                map.draw_win()
+                break
+            else:
+                map.draw_lose()
+                break
 
 
 while True:
-    try:
-        player_color_choice = screen.textinput(title="Snake color", prompt="Use arrows to navigate the "
-                                                                           "snake to the fruit. \nDuring the game "
-                                                                           "make sure"
-                                                                           " to not hold the arrows as it bugs snake "
-                                                                           "movement\n\nChoose the color of your "
-                                                                           "snake.\n"
-                                                                           "Color could be anything from the "
-                                                                           "https://cs111.wellesley.edu/reference"
-                                                                           "/colors,\nwhich contains most of regular "
-                                                                           "colors if you dont bother checking\n"
-                                                                           "If color is set to random snake is going to"
-                                                                           "be colorful.""")
-        player = Snake(player_color_choice)
-        game_on = True
+    screen = screen_setup()
+    apple = Fruit()
+    score_board = ScoreBoard()
+    player = player_setup(screen)
+    game(board=screen, snake=player, sweet=apple, scoreboard=score_board)
+    user_choice = screen.textinput(title="Game over", prompt="Do you want to play again? (y/n)")
+    while user_choice != "y" and user_choice != "n" and user_choice != "":
+        user_choice = screen.textinput(title="Game over", prompt="Do you want to play again? (y/n)")
+    if user_choice == "y":
+        screen.clear()
+        continue
+    elif user_choice == "n" or user_choice == "":
+        screen.bye()
         break
-    except (turtle.TurtleGraphicsError, TypeError):
-        while screen.textinput(title="Error", prompt="Wrong input. Try again. Write \"ok\".") != "ok":
-            continue
-
-
-apple = Fruit()
-score_board = ScoreBoard()
-
-
-while game_on:
-    screen.update()
-    time.sleep(0.1)
-    screen.listen()
-    snake_turn()
-    snake_eats_fruit()
-    screen.update()
-    time.sleep(0.1)
-    player.move()
-    snake_eats_fruit()
-    if not player.is_alive:
-        if len(player.snake) >= 30 * 28:
-            map.draw_win()
-            screen.update()
-            game_on = False
-            continue
-        else:
-            map.draw_lose()
-            screen.update()
-            game_on = False
-            continue
-
-screen.exitonclick()

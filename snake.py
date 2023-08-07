@@ -17,7 +17,7 @@ class Snake:
         self.x_pos = 310
         self.y_pos = 310
         if color == "":
-            self.color = "white"
+            self.color = "random"
         else:
             self.color = color
         self.create_snake()
@@ -51,21 +51,33 @@ class Snake:
     def up(self):
         if self.snake[0].heading() != 270 and self.snake[0].heading() != 90:
             self.snake[0].setheading(90)
+            if self.snake[0].ycor() >= 590:
+                self.is_alive = False
+                return
             self.move()
 
     def down(self):
         if self.snake[0].heading() != 90 and self.snake[0].heading() != 270:
             self.snake[0].setheading(270)
+            if self.snake[0].ycor() <= 10:
+                self.is_alive = False
+                return
             self.move()
 
     def left(self):
         if self.snake[0].heading() != 0 and self.snake[0].heading() != 180:
             self.snake[0].setheading(180)
+            if self.snake[0].xcor() <= 11:
+                self.is_alive = False
+                return
             self.move()
 
     def right(self):
         if self.snake[0].heading() != 180 and self.snake[0].heading() != 0:
             self.snake[0].setheading(0)
+            if self.snake[0].xcor() >= 590:
+                self.is_alive = False
+                return
             self.move()
 
     def collision_walls(self):
