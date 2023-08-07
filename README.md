@@ -6,9 +6,13 @@
 
 Snake clone.
 
-The entire game was made using only built-in Python libraries, turtle, and random, which means you only need Python installed for it to work properly.
+The entire game was made using only built-in Python libraries (turtle and random) and tkinter which means you only need Python and tkinter package installed for it to work properly.
 
-Keep in mind it was made on Linux Ubuntu 22.04.
+If you don't have tkinter already you can install it by writing in your console:
+
+$pip install tkinter
+
+Keep in mind this game was made on Linux Ubuntu 22.04.
 
 ---------------------
 
