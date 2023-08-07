@@ -87,7 +87,7 @@ class Snake:
 
     def collision_body(self):
         for segment in self.snake[1:]:
-            if self.snake[0].position() == segment.position():
+            if self.snake[0].distance(segment) < 8:
                 self.is_alive = False
 
     def grow(self):
