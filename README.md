@@ -16,10 +16,10 @@ Keep in mind this game was made on Linux Ubuntu 22.04.
 
 ---------------------
 
-Project contains 5 files:
-    3 classes - snake, fruit, and scoreboard
-    1 file map.py holding mapping functions for the grid and on-screen text
-    1 main.py which contains functions operating on class objects and dependencies between them
+Project contains 5 files:  
+    3 classes - snake, fruit, and scoreboard  
+    1 file map.py holding mapping functions for the grid and on-screen text  
+    1 main.py which contains functions operating on class objects and dependencies between them  
 
 ---------------------
 
