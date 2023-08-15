@@ -112,9 +112,11 @@ def game(board, snake, sweet, scoreboard):
 
 
 while True:
+    with open("high_score.txt", "r") as file:
+        high_score = int(file.read())
     screen = screen_setup()
     apple = Fruit()
-    score_board = ScoreBoard()
+    score_board = ScoreBoard(high_score)
     player = player_setup(screen)
     game(board=screen, snake=player, sweet=apple, scoreboard=score_board)
     user_choice = screen.textinput(title="Game over", prompt="Do you want to play again? (y/n)")
@@ -122,7 +124,9 @@ while True:
         user_choice = screen.textinput(title="Game over", prompt="Do you want to play again? (y/n)")
     if user_choice == "y":
         screen.clear()
+        score_board.reset()
         continue
     elif user_choice == "n" or user_choice == "":
         screen.bye()
+        score_board.reset()
         break
